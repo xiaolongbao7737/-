@@ -1,0 +1,300 @@
+Epoch [1/100], Batch [50/135], Loss: 1.8768
+Epoch [1/100], Batch [100/135], Loss: 1.8617
+Epoch [1/100] completed - Average Loss: 1.8583, Accuracy: 15.69%
+Epoch [2/100], Batch [50/135], Loss: 1.7955
+Epoch [2/100], Batch [100/135], Loss: 1.7825
+Epoch [2/100] completed - Average Loss: 1.8053, Accuracy: 17.29%
+Epoch [3/100], Batch [50/135], Loss: 1.4300
+Epoch [3/100], Batch [100/135], Loss: 1.4768
+Epoch [3/100] completed - Average Loss: 1.4641, Accuracy: 37.82%
+Epoch [4/100], Batch [50/135], Loss: 0.9994
+Epoch [4/100], Batch [100/135], Loss: 1.0477
+Epoch [4/100] completed - Average Loss: 0.9760, Accuracy: 62.13%
+Epoch [5/100], Batch [50/135], Loss: 0.6705
+Epoch [5/100], Batch [100/135], Loss: 0.9360
+Epoch [5/100] completed - Average Loss: 0.7186, Accuracy: 71.67%
+Epoch [6/100], Batch [50/135], Loss: 0.5168
+Epoch [6/100], Batch [100/135], Loss: 0.5970
+Epoch [6/100] completed - Average Loss: 0.5943, Accuracy: 76.76%
+Epoch [7/100], Batch [50/135], Loss: 0.5090
+Epoch [7/100], Batch [100/135], Loss: 0.4903
+Epoch [7/100] completed - Average Loss: 0.4596, Accuracy: 82.71%
+Epoch [8/100], Batch [50/135], Loss: 0.4479
+Epoch [8/100], Batch [100/135], Loss: 0.5322
+Epoch [8/100] completed - Average Loss: 0.4007, Accuracy: 84.93%
+Epoch [9/100], Batch [50/135], Loss: 0.2671
+Epoch [9/100], Batch [100/135], Loss: 0.3410
+Epoch [9/100] completed - Average Loss: 0.3480, Accuracy: 87.22%
+Epoch [10/100], Batch [50/135], Loss: 0.1353
+Epoch [10/100], Batch [100/135], Loss: 0.5157
+Epoch [10/100] completed - Average Loss: 0.3212, Accuracy: 88.15%
+Epoch [11/100], Batch [50/135], Loss: 0.3748
+Epoch [11/100], Batch [100/135], Loss: 0.1132
+Epoch [11/100] completed - Average Loss: 0.2868, Accuracy: 89.40%
+Epoch [12/100], Batch [50/135], Loss: 0.3151
+Epoch [12/100], Batch [100/135], Loss: 0.2702
+Epoch [12/100] completed - Average Loss: 0.2630, Accuracy: 90.83%
+Epoch [13/100], Batch [50/135], Loss: 0.3650
+Epoch [13/100], Batch [100/135], Loss: 0.3732
+Epoch [13/100] completed - Average Loss: 0.2313, Accuracy: 92.34%
+Epoch [14/100], Batch [50/135], Loss: 0.2630
+Epoch [14/100], Batch [100/135], Loss: 0.2203
+Epoch [14/100] completed - Average Loss: 0.2077, Accuracy: 92.57%
+Epoch [15/100], Batch [50/135], Loss: 0.1211
+Epoch [15/100], Batch [100/135], Loss: 0.0923
+Epoch [15/100] completed - Average Loss: 0.1909, Accuracy: 93.15%
+Epoch [16/100], Batch [50/135], Loss: 0.1361
+Epoch [16/100], Batch [100/135], Loss: 0.1202
+Epoch [16/100] completed - Average Loss: 0.1758, Accuracy: 94.05%
+Epoch [17/100], Batch [50/135], Loss: 0.2564
+Epoch [17/100], Batch [100/135], Loss: 0.0937
+Epoch [17/100] completed - Average Loss: 0.1686, Accuracy: 93.70%
+Epoch [18/100], Batch [50/135], Loss: 0.4397
+Epoch [18/100], Batch [100/135], Loss: 0.2498
+Epoch [18/100] completed - Average Loss: 0.1873, Accuracy: 93.59%
+Epoch [19/100], Batch [50/135], Loss: 0.1410
+Epoch [19/100], Batch [100/135], Loss: 0.0508
+Epoch [19/100] completed - Average Loss: 0.1450, Accuracy: 94.77%
+Epoch [20/100], Batch [50/135], Loss: 0.1962
+Epoch [20/100], Batch [100/135], Loss: 0.1127
+Epoch [20/100] completed - Average Loss: 0.1347, Accuracy: 94.95%
+Epoch [21/100], Batch [50/135], Loss: 0.3696
+Epoch [21/100], Batch [100/135], Loss: 0.0448
+Epoch [21/100] completed - Average Loss: 0.1282, Accuracy: 95.72%
+Epoch [22/100], Batch [50/135], Loss: 0.1528
+Epoch [22/100], Batch [100/135], Loss: 0.0567
+Epoch [22/100] completed - Average Loss: 0.1195, Accuracy: 95.93%
+Epoch [23/100], Batch [50/135], Loss: 0.0193
+Epoch [23/100], Batch [100/135], Loss: 0.0409
+Epoch [23/100] completed - Average Loss: 0.1113, Accuracy: 96.41%
+Epoch [24/100], Batch [50/135], Loss: 0.1930
+Epoch [24/100], Batch [100/135], Loss: 0.1489
+Epoch [24/100] completed - Average Loss: 0.1026, Accuracy: 96.53%
+Epoch [25/100], Batch [50/135], Loss: 0.0892
+Epoch [25/100], Batch [100/135], Loss: 0.2391
+Epoch [25/100] completed - Average Loss: 0.1270, Accuracy: 95.49%
+Epoch [26/100], Batch [50/135], Loss: 0.2455
+Epoch [26/100], Batch [100/135], Loss: 0.1610
+Epoch [26/100] completed - Average Loss: 0.1311, Accuracy: 95.44%
+Epoch [27/100], Batch [50/135], Loss: 0.0411
+Epoch [27/100], Batch [100/135], Loss: 0.0141
+Epoch [27/100] completed - Average Loss: 0.0963, Accuracy: 96.60%
+Epoch [28/100], Batch [50/135], Loss: 0.0060
+Epoch [28/100], Batch [100/135], Loss: 0.1082
+Epoch [28/100] completed - Average Loss: 0.0890, Accuracy: 96.97%
+Epoch [29/100], Batch [50/135], Loss: 0.2561
+Epoch [29/100], Batch [100/135], Loss: 0.0396
+Epoch [29/100] completed - Average Loss: 0.0835, Accuracy: 97.13%
+Epoch [30/100], Batch [50/135], Loss: 0.0311
+Epoch [30/100], Batch [100/135], Loss: 0.2420
+Epoch [30/100] completed - Average Loss: 0.1065, Accuracy: 96.48%
+Epoch [31/100], Batch [50/135], Loss: 0.0336
+Epoch [31/100], Batch [100/135], Loss: 0.0292
+Epoch [31/100] completed - Average Loss: 0.0819, Accuracy: 97.43%
+Epoch [32/100], Batch [50/135], Loss: 0.3383
+Epoch [32/100], Batch [100/135], Loss: 0.1836
+Epoch [32/100] completed - Average Loss: 0.1010, Accuracy: 96.76%
+Epoch [33/100], Batch [50/135], Loss: 0.0421
+Epoch [33/100], Batch [100/135], Loss: 0.0157
+Epoch [33/100] completed - Average Loss: 0.0630, Accuracy: 97.92%
+Epoch [34/100], Batch [50/135], Loss: 0.0088
+Epoch [34/100], Batch [100/135], Loss: 0.0519
+Epoch [34/100] completed - Average Loss: 0.0723, Accuracy: 97.41%
+Epoch [35/100], Batch [50/135], Loss: 0.0214
+Epoch [35/100], Batch [100/135], Loss: 0.0234
+Epoch [35/100] completed - Average Loss: 0.0640, Accuracy: 97.87%
+Epoch [36/100], Batch [50/135], Loss: 0.1186
+Epoch [36/100], Batch [100/135], Loss: 0.0314
+Epoch [36/100] completed - Average Loss: 0.0659, Accuracy: 97.92%
+Epoch [37/100], Batch [50/135], Loss: 0.0370
+Epoch [37/100], Batch [100/135], Loss: 0.0255
+Epoch [37/100] completed - Average Loss: 0.0501, Accuracy: 98.31%
+Epoch [38/100], Batch [50/135], Loss: 0.1254
+Epoch [38/100], Batch [100/135], Loss: 0.0396
+Epoch [38/100] completed - Average Loss: 0.0691, Accuracy: 97.80%
+Epoch [39/100], Batch [50/135], Loss: 0.0939
+Epoch [39/100], Batch [100/135], Loss: 0.0059
+Epoch [39/100] completed - Average Loss: 0.0555, Accuracy: 98.15%
+Epoch [40/100], Batch [50/135], Loss: 0.0124
+Epoch [40/100], Batch [100/135], Loss: 0.1076
+Epoch [40/100] completed - Average Loss: 0.0680, Accuracy: 97.52%
+Epoch [41/100], Batch [50/135], Loss: 0.0195
+Epoch [41/100], Batch [100/135], Loss: 0.0581
+Epoch [41/100] completed - Average Loss: 0.0762, Accuracy: 97.52%
+Epoch [42/100], Batch [50/135], Loss: 0.0650
+Epoch [42/100], Batch [100/135], Loss: 0.0395
+Epoch [42/100] completed - Average Loss: 0.0650, Accuracy: 97.78%
+Epoch [43/100], Batch [50/135], Loss: 0.0082
+Epoch [43/100], Batch [100/135], Loss: 0.0249
+Epoch [43/100] completed - Average Loss: 0.0543, Accuracy: 98.17%
+Epoch [44/100], Batch [50/135], Loss: 0.1460
+Epoch [44/100], Batch [100/135], Loss: 0.0127
+Epoch [44/100] completed - Average Loss: 0.0694, Accuracy: 97.52%
+Epoch [45/100], Batch [50/135], Loss: 0.2923
+Epoch [45/100], Batch [100/135], Loss: 0.0748
+Epoch [45/100] completed - Average Loss: 0.0480, Accuracy: 98.50%
+Epoch [46/100], Batch [50/135], Loss: 0.0208
+Epoch [46/100], Batch [100/135], Loss: 0.4663
+Epoch [46/100] completed - Average Loss: 0.0721, Accuracy: 97.69%
+Epoch [47/100], Batch [50/135], Loss: 0.0834
+Epoch [47/100], Batch [100/135], Loss: 0.0378
+Epoch [47/100] completed - Average Loss: 0.0572, Accuracy: 98.10%
+Epoch [48/100], Batch [50/135], Loss: 0.0025
+Epoch [48/100], Batch [100/135], Loss: 0.0053
+Epoch [48/100] completed - Average Loss: 0.0544, Accuracy: 98.10%
+Epoch [49/100], Batch [50/135], Loss: 0.0031
+Epoch [49/100], Batch [100/135], Loss: 0.0192
+Epoch [49/100] completed - Average Loss: 0.0457, Accuracy: 98.47%
+Epoch [50/100], Batch [50/135], Loss: 0.0040
+Epoch [50/100], Batch [100/135], Loss: 0.0137
+Epoch [50/100] completed - Average Loss: 0.0412, Accuracy: 98.80%
+Epoch [51/100], Batch [50/135], Loss: 0.1020
+Epoch [51/100], Batch [100/135], Loss: 0.0812
+Epoch [51/100] completed - Average Loss: 0.0566, Accuracy: 97.99%
+Epoch [52/100], Batch [50/135], Loss: 0.0162
+Epoch [52/100], Batch [100/135], Loss: 0.0022
+Epoch [52/100] completed - Average Loss: 0.0410, Accuracy: 98.77%
+Epoch [53/100], Batch [50/135], Loss: 0.0537
+Epoch [53/100], Batch [100/135], Loss: 0.0543
+Epoch [53/100] completed - Average Loss: 0.0518, Accuracy: 98.24%
+Epoch [54/100], Batch [50/135], Loss: 0.0019
+Epoch [54/100], Batch [100/135], Loss: 0.0792
+Epoch [54/100] completed - Average Loss: 0.0500, Accuracy: 98.54%
+Epoch [55/100], Batch [50/135], Loss: 0.0293
+Epoch [55/100], Batch [100/135], Loss: 0.0844
+Epoch [55/100] completed - Average Loss: 0.0446, Accuracy: 98.54%
+Epoch [56/100], Batch [50/135], Loss: 0.0348
+Epoch [56/100], Batch [100/135], Loss: 0.0836
+Epoch [56/100] completed - Average Loss: 0.0565, Accuracy: 98.10%
+Epoch [57/100], Batch [50/135], Loss: 0.0250
+Epoch [57/100], Batch [100/135], Loss: 0.2395
+Epoch [57/100] completed - Average Loss: 0.0523, Accuracy: 98.12%
+Epoch [58/100], Batch [50/135], Loss: 0.0206
+Epoch [58/100], Batch [100/135], Loss: 0.0354
+Epoch [58/100] completed - Average Loss: 0.0414, Accuracy: 98.47%
+Epoch [59/100], Batch [50/135], Loss: 0.1204
+Epoch [59/100], Batch [100/135], Loss: 0.0003
+Epoch [59/100] completed - Average Loss: 0.0360, Accuracy: 98.66%
+Epoch [60/100], Batch [50/135], Loss: 0.0006
+Epoch [60/100], Batch [100/135], Loss: 0.0097
+Epoch [60/100] completed - Average Loss: 0.0440, Accuracy: 98.73%
+Epoch [61/100], Batch [50/135], Loss: 0.2145
+Epoch [61/100], Batch [100/135], Loss: 0.0801
+Epoch [61/100] completed - Average Loss: 0.0515, Accuracy: 98.15%
+Epoch [62/100], Batch [50/135], Loss: 0.1179
+Epoch [62/100], Batch [100/135], Loss: 0.0084
+Epoch [62/100] completed - Average Loss: 0.0306, Accuracy: 99.03%
+Epoch [63/100], Batch [50/135], Loss: 0.0030
+Epoch [63/100], Batch [100/135], Loss: 0.0722
+Epoch [63/100] completed - Average Loss: 0.0271, Accuracy: 98.89%
+Epoch [64/100], Batch [50/135], Loss: 0.0030
+Epoch [64/100], Batch [100/135], Loss: 0.0359
+Epoch [64/100] completed - Average Loss: 0.0608, Accuracy: 97.87%
+Epoch [65/100], Batch [50/135], Loss: 0.1130
+Epoch [65/100], Batch [100/135], Loss: 0.0116
+Epoch [65/100] completed - Average Loss: 0.0422, Accuracy: 98.66%
+Epoch [66/100], Batch [50/135], Loss: 0.0457
+Epoch [66/100], Batch [100/135], Loss: 0.1261
+Epoch [66/100] completed - Average Loss: 0.0317, Accuracy: 98.82%
+Epoch [67/100], Batch [50/135], Loss: 0.0094
+Epoch [67/100], Batch [100/135], Loss: 0.0095
+Epoch [67/100] completed - Average Loss: 0.0514, Accuracy: 97.89%
+Epoch [68/100], Batch [50/135], Loss: 0.0870
+Epoch [68/100], Batch [100/135], Loss: 0.0493
+Epoch [68/100] completed - Average Loss: 0.0412, Accuracy: 98.54%
+Epoch [69/100], Batch [50/135], Loss: 0.0388
+Epoch [69/100], Batch [100/135], Loss: 0.0432
+Epoch [69/100] completed - Average Loss: 0.0451, Accuracy: 98.52%
+Epoch [70/100], Batch [50/135], Loss: 0.0219
+Epoch [70/100], Batch [100/135], Loss: 0.1688
+Epoch [70/100] completed - Average Loss: 0.0466, Accuracy: 98.66%
+Epoch [71/100], Batch [50/135], Loss: 0.0134
+Epoch [71/100], Batch [100/135], Loss: 0.0045
+Epoch [71/100] completed - Average Loss: 0.0336, Accuracy: 98.91%
+Epoch [72/100], Batch [50/135], Loss: 0.0047
+Epoch [72/100], Batch [100/135], Loss: 0.0061
+Epoch [72/100] completed - Average Loss: 0.0261, Accuracy: 99.12%
+Epoch [73/100], Batch [50/135], Loss: 0.0166
+Epoch [73/100], Batch [100/135], Loss: 0.0725
+Epoch [73/100] completed - Average Loss: 0.0449, Accuracy: 98.59%
+Epoch [74/100], Batch [50/135], Loss: 0.0822
+Epoch [74/100], Batch [100/135], Loss: 0.0047
+Epoch [74/100] completed - Average Loss: 0.0415, Accuracy: 98.75%
+Epoch [75/100], Batch [50/135], Loss: 0.0495
+Epoch [75/100], Batch [100/135], Loss: 0.0353
+Epoch [75/100] completed - Average Loss: 0.0326, Accuracy: 98.96%
+Epoch [76/100], Batch [50/135], Loss: 0.0834
+Epoch [76/100], Batch [100/135], Loss: 0.0428
+Epoch [76/100] completed - Average Loss: 0.0248, Accuracy: 99.17%
+Epoch [77/100], Batch [50/135], Loss: 0.0772
+Epoch [77/100], Batch [100/135], Loss: 0.1270
+Epoch [77/100] completed - Average Loss: 0.0508, Accuracy: 98.17%
+Epoch [78/100], Batch [50/135], Loss: 0.0190
+Epoch [78/100], Batch [100/135], Loss: 0.0078
+Epoch [78/100] completed - Average Loss: 0.0377, Accuracy: 98.63%
+Epoch [79/100], Batch [50/135], Loss: 0.0506
+Epoch [79/100], Batch [100/135], Loss: 0.0005
+Epoch [79/100] completed - Average Loss: 0.0236, Accuracy: 99.21%
+Epoch [80/100], Batch [50/135], Loss: 0.0443
+Epoch [80/100], Batch [100/135], Loss: 0.1279
+Epoch [80/100] completed - Average Loss: 0.0301, Accuracy: 98.94%
+Epoch [81/100], Batch [50/135], Loss: 0.0014
+Epoch [81/100], Batch [100/135], Loss: 0.0094
+Epoch [81/100] completed - Average Loss: 0.0190, Accuracy: 99.35%
+Epoch [82/100], Batch [50/135], Loss: 0.0006
+Epoch [82/100], Batch [100/135], Loss: 0.0340
+Epoch [82/100] completed - Average Loss: 0.0348, Accuracy: 98.87%
+Epoch [83/100], Batch [50/135], Loss: 0.0481
+Epoch [83/100], Batch [100/135], Loss: 0.0046
+Epoch [83/100] completed - Average Loss: 0.0353, Accuracy: 98.87%
+Epoch [84/100], Batch [50/135], Loss: 0.0806
+Epoch [84/100], Batch [100/135], Loss: 0.0018
+Epoch [84/100] completed - Average Loss: 0.0528, Accuracy: 98.45%
+Epoch [85/100], Batch [50/135], Loss: 0.0508
+Epoch [85/100], Batch [100/135], Loss: 0.0004
+Epoch [85/100] completed - Average Loss: 0.0439, Accuracy: 98.50%
+Epoch [86/100], Batch [50/135], Loss: 0.0059
+Epoch [86/100], Batch [100/135], Loss: 0.0417
+Epoch [86/100] completed - Average Loss: 0.0272, Accuracy: 99.00%
+Epoch [87/100], Batch [50/135], Loss: 0.0041
+Epoch [87/100], Batch [100/135], Loss: 0.0029
+Epoch [87/100] completed - Average Loss: 0.0203, Accuracy: 99.35%
+Epoch [88/100], Batch [50/135], Loss: 0.0014
+Epoch [88/100], Batch [100/135], Loss: 0.0276
+Epoch [88/100] completed - Average Loss: 0.0387, Accuracy: 98.89%
+Epoch [89/100], Batch [50/135], Loss: 0.2338
+Epoch [89/100], Batch [100/135], Loss: 0.0010
+Epoch [89/100] completed - Average Loss: 0.0491, Accuracy: 98.43%
+Epoch [90/100], Batch [50/135], Loss: 0.0013
+Epoch [90/100], Batch [100/135], Loss: 0.0011
+Epoch [90/100] completed - Average Loss: 0.0195, Accuracy: 99.21%
+Epoch [91/100], Batch [50/135], Loss: 0.0032
+Epoch [91/100], Batch [100/135], Loss: 0.0883
+Epoch [91/100] completed - Average Loss: 0.0307, Accuracy: 98.77%
+Epoch [92/100], Batch [50/135], Loss: 0.1980
+Epoch [92/100], Batch [100/135], Loss: 0.0748
+Epoch [92/100] completed - Average Loss: 0.0298, Accuracy: 99.26%
+Epoch [93/100], Batch [50/135], Loss: 0.0079
+Epoch [93/100], Batch [100/135], Loss: 0.0003
+Epoch [93/100] completed - Average Loss: 0.0228, Accuracy: 99.21%
+Epoch [94/100], Batch [50/135], Loss: 0.0524
+Epoch [94/100], Batch [100/135], Loss: 0.0175
+Epoch [94/100] completed - Average Loss: 0.0267, Accuracy: 99.12%
+Epoch [95/100], Batch [50/135], Loss: 0.0012
+Epoch [95/100], Batch [100/135], Loss: 0.0012
+Epoch [95/100] completed - Average Loss: 0.0164, Accuracy: 99.49%
+Epoch [96/100], Batch [50/135], Loss: 0.0036
+Epoch [96/100], Batch [100/135], Loss: 0.0084
+Epoch [96/100] completed - Average Loss: 0.0347, Accuracy: 99.03%
+Epoch [97/100], Batch [50/135], Loss: 0.0172
+Epoch [97/100], Batch [100/135], Loss: 0.0065
+Epoch [97/100] completed - Average Loss: 0.0381, Accuracy: 98.87%
+Epoch [98/100], Batch [50/135], Loss: 0.0094
+Epoch [98/100], Batch [100/135], Loss: 0.0023
+Epoch [98/100] completed - Average Loss: 0.0393, Accuracy: 98.94%
+Epoch [99/100], Batch [50/135], Loss: 0.0004
+Epoch [99/100], Batch [100/135], Loss: 0.0023
+Epoch [99/100] completed - Average Loss: 0.0125, Accuracy: 99.56%
+Epoch [100/100], Batch [50/135], Loss: 0.0086
+Epoch [100/100], Batch [100/135], Loss: 0.0317
+Epoch [100/100] completed - Average Loss: 0.0209, Accuracy: 99.42%

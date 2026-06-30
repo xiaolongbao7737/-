@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 手势数字识别平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{font-size:16px;-webkit-font-smoothing:antialiased}
+    body{font-family:'Noto Sans SC','Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#F8FAFC;color:#1E293B;min-height:100vh;line-height:1.6}
+    a{color:inherit;text-decoration:none}
+
+    /* ====== NAV ====== */
+    .nav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #E5E7EB;height:72px;display:flex;align-items:center;padding:0 2rem}
+    .nav-inner{width:100%;max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .nav-brand{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1rem;color:#1E293B;letter-spacing:-.01em}
+    .nav-brand svg{width:24px;height:24px;color:#3B82F6}
+    .nav-links{display:flex;align-items:center;gap:1.5rem}
+    .nav-link{font-size:.85rem;font-weight:500;color:#64748B;padding:.3rem 0;position:relative;transition:.2s;cursor:pointer;border:none;background:none;font-family:inherit}
+    .nav-link:hover{color:#3B82F6}
+    .nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:#3B82F6;border-radius:1px;transition:.25s}
+    .nav-link:hover::after{width:100%}
+    .nav-link.on{color:#3B82F6;background:rgba(59,130,246,.06);padding:.35rem 1rem;border-radius:100px}.nav-link.on::after{display:none}
+    @media(max-width:768px){.nav{padding:0 1rem}.nav-links{gap:.8rem}.nav-link{font-size:.78rem}}
+
+    /* ====== LAYOUT ====== */
+    .app{max-width:1500px;margin:0 auto;padding:2rem}
+    .page{display:none}.page.on{display:block;animation:fadeIn .35s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .section-gap{margin-bottom:2rem}
+
+    /* ====== CARDS ====== */
+    .card{background:#fff;border:1px solid #E5E7EB;border-radius:20px;padding:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.02)}
+
+    /* ====== BUTTONS ====== */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:inherit;font-size:.85rem;font-weight:600;padding:.55rem 1.4rem;border-radius:12px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;height:44px}
+    .btn-primary{background:#3B82F6;color:#fff}.btn-primary:hover{background:#2563EB;transform:translateY(-1px);box-shadow:0 2px 10px rgba(59,130,246,.15)}
+    .btn-primary:active{transform:scale(.98)}
+    .btn-outline{background:#fff;color:#3B82F6;border:1.5px solid #3B82F6}.btn-outline:hover{background:#EFF6FF}
+    .btn-ghost{background:#fff;color:#64748B;border:1px solid #E5E7EB}.btn-ghost:hover{background:#F8FAFC;color:#1E293B}
+    .btn-lg{height:50px;padding:.6rem 2rem;font-size:.95rem;border-radius:14px}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+    /* ====== TOAST ====== */
+    .toast-c{position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+    .toast{padding:.65rem 1rem;border-radius:12px;font-size:.82rem;font-weight:500;animation:slideIn .3s ease;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.08);max-width:360px;border:1px solid #E5E7EB}
+    .toast.ok{border-left:3px solid #10B981}.toast.err{border-left:3px solid #EF4444}.toast.info{border-left:3px solid #3B82F6}
+    @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+    /* ====== HERO ====== */
+    .hero{display:flex;align-items:center;gap:4rem;padding:2rem 0 3rem}
+    .hero-l{flex:1}.hero-l h1{font-size:clamp(2.2rem,4.5vw,3.2rem);font-weight:800;letter-spacing:-.02em;line-height:1.2;color:#0F172A;margin-bottom:.8rem}
+    .hero-l h1 span{color:#3B82F6}.hero-l p{color:#64748B;font-size:1.05rem;margin-bottom:1.8rem;max-width:500px;line-height:1.7}
+    .hero-l .btns{display:flex;gap:.8rem}
+    .hero-r{flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+    .hero-illustration{width:260px;height:260px;background:#F0F7FF;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+    .hero-illustration::before{content:'';position:absolute;inset:-3px;border-radius:50%;border:3px solid #BFDBFE;opacity:.5}
+    .hero-illustration span{font-size:5rem}
+    @media(max-width:900px){.hero{flex-direction:column;text-align:center;gap:2rem;padding:1rem 0 2rem}.hero-l .btns{justify-content:center}.hero-l p{margin:0 auto 1.5rem}}
+
+    /* ====== STAT CARDS ====== */
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem}
+    .stat-card{background:#fff;border:1px solid #E5E7EB;border-radius:20px;padding:1.5rem;text-align:center;transition:.2s}
+    .stat-card:hover{border-color:#BFDBFE;box-shadow:0 2px 12px rgba(59,130,246,.04)}
+    .stat-card .icon{font-size:1.6rem;margin-bottom:.5rem}.stat-card .val{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;color:#1E293B;line-height:1.1}.stat-card .lbl{font-size:.78rem;color:#64748B;margin-top:.3rem;font-weight:500}
+    @media(max-width:768px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* ====== SECTION TITLE ====== */
+    .sect-title{font-size:.9rem;font-weight:700;color:#1E293B;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
+    .sect-title::before{content:'';width:4px;height:16px;background:#3B82F6;border-radius:2px}
+
+    /* ====== INFO GRID ====== */
+    .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+    .info-item{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;background:#F8FAFC;border-radius:10px}.info-item .k{font-size:.72rem;color:#64748B}.info-item .v{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:#1E293B;font-weight:500}
+    @media(max-width:900px){.info-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* ====== FLOW ====== */
+    .flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;padding:1rem 0}
+    .flow-step{text-align:center;padding:1rem 1.2rem;background:#F8FAFC;border-radius:12px;min-width:110px;border:1px solid #E5E7EB}
+    .flow-step .num{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:#3B82F6}.flow-step .txt{font-size:.72rem;color:#64748B;margin-top:.1rem}
+    .flow-arrow{color:#CBD5E1;font-size:1.2rem;padding:0 .5rem}@media(max-width:900px){.flow-arrow{display:none}.flow-step{flex:1 1 auto}}
+
+    /* ====== RECOGNITION LAYOUT ====== */
+    .recog-grid{display:grid;grid-template-columns:340px 1fr 340px;gap:1.5rem;align-items:start}
+    .recog-grid>.card,.recog-grid>.recog-left{height:540px}
+    @media(max-width:1150px){.recog-grid{grid-template-columns:1fr}.recog-grid>.card,.recog-grid>.recog-left{height:auto}.preview-box{height:350px}}
+
+    /* Upload zone */
+    .up-zone{border:2px dashed #CBD5E1;border-radius:16px;padding:1.5rem 1.2rem;text-align:center;cursor:pointer;transition:all .25s;background:#FAFBFC;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px}
+    .up-zone:hover{border-color:#3B82F6;background:#F0F7FF;transform:translateY(-1px);box-shadow:0 4px 16px rgba(59,130,246,.06)}
+    .up-zone p{color:#64748B;font-size:.85rem}.up-zone span{color:#94A3B8;font-size:.7rem;display:block;margin-top:.3rem}#file-input{display:none}
+
+    /* Samples */
+    .samples-row{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+    .sample-btn{width:46px;height:46px;border-radius:12px;border:1.5px solid #E5E7EB;background:#fff;cursor:pointer;transition:.2s;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem;color:#64748B}
+    .sample-btn:hover{border-color:#3B82F6;color:#3B82F6;background:#F0F7FF}.sample-btn:active{transform:scale(.95)}
+
+    /* Preview */
+    .preview-box{background:#FAFBFC;border-radius:14px;border:1px solid #E5E7EB;flex:1;overflow:hidden;margin-bottom:.6rem;position:relative}
+    .preview-box img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;border-radius:8px;animation:imgIn .45s cubic-bezier(.22,.61,.36,1)}
+    @keyframes imgIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+    .preview-box .preview-empty{color:#94A3B8;font-size:.82rem;position:absolute}
+    #preview-name{text-align:center;font-size:.7rem;color:#94A3B8;margin-bottom:.6rem}
+
+    /* Prediction */
+    .pred-empty{text-align:center;color:#94A3B8;font-size:.82rem;padding:2rem;flex:1;display:flex;align-items:center;justify-content:center}.pred-spin{display:none;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;flex:1}.pred-spin.on{display:flex}
+    .spin{width:30px;height:30px;border:2.5px solid #E5E7EB;border-top-color:#3B82F6;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .pred-spin span{font-size:.78rem;color:#64748B}
+    .pred-data-d{display:none}.pred-data-d.on{display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;flex:1}
+    .pred-data-d.on .r-wrap .num{animation:numPop .5s cubic-bezier(.22,.61,.36,1)}
+    @keyframes numPop{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}60%{transform:translate(-50%,-50%) scale(1.08)}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+    .r-wrap{position:relative;width:110px;height:110px;margin:0 auto .4rem}
+    .r-wrap svg{transform:rotate(-90deg);width:110px;height:110px}.r-wrap .bg-c{fill:none;stroke:#F1F5F9;stroke-width:5}.r-wrap .fg-c{fill:none;stroke:#3B82F6;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .7s cubic-bezier(.22,.61,.36,1),stroke .3s}
+    .r-wrap .num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:2.6rem;color:#1E293B;line-height:1}
+    .pred-conf{font-size:.85rem;color:#64748B;font-weight:500}.pred-conf b{font-weight:700;color:#1E293B}
+    .inf-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:.8rem 0;width:100%}.inf-item{background:#F8FAFC;border-radius:10px;padding:.55rem .3rem;text-align:center;transition:.2s}.inf-item:hover{background:#F0F7FF}.inf-item .iv{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:#3B82F6;font-weight:600}.inf-item .il{font-size:.55rem;color:#94A3B8;margin-top:.15rem}
+    .bars-w{margin-top:.6rem;width:100%}.bar-r{display:flex;align-items:center;gap:.35rem;margin-bottom:.15rem}.bar-l{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#94A3B8;width:.8rem;text-align:right;flex-shrink:0}.bar-t{flex:1;height:5px;background:#F1F5F9;border-radius:3px;overflow:hidden}.bar-f{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.22,.61,.36,1);width:0}.bar-f.h{background:#3B82F6}.bar-f.m{background:#93C5FD}.bar-f.l{background:#E5E7EB}.bar-p{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#94A3B8;width:2.4rem;text-align:right;flex-shrink:0}
+    .err-box{display:none;margin-top:.6rem;padding:.5rem .8rem;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;font-size:.74rem;border-radius:10px;text-align:center}.err-box.show{display:block}
+
+    /* History */
+    .hist-list{max-height:340px;overflow-y:auto}.hist-item{display:flex;align-items:center;gap:.6rem;padding:.5rem;border-bottom:1px solid #F1F5F9}
+    .hist-thumb{width:38px;height:38px;border-radius:8px;overflow:hidden;flex-shrink:0;background:#F1F5F9;display:flex;align-items:center;justify-content:center}.hist-thumb img{width:100%;height:100%;object-fit:cover}
+    .hist-info{flex:1;min-width:0}.hist-info .d{font-weight:600;font-size:.82rem;color:#1E293B}.hist-info .t{font-size:.6rem;color:#94A3B8}.hist-info .rt{font-size:.55rem;color:#CBD5E1}
+
+    /* ====== ANALYTICS ====== */
+    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}@media(max-width:1000px){.analytics-grid{grid-template-columns:1fr}}
+    .chart-box h3{font-size:.8rem;font-weight:600;color:#1E293B;margin-bottom:.8rem}.chart-box canvas{max-height:240px}
+
+    /* ====== MODAL ====== */
+    .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:9990;align-items:center;justify-content:center}.modal-bg.on{display:flex}
+    .modal-box{background:#fff;border:1px solid #E5E7EB;border-radius:20px;padding:2rem;max-width:400px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.06)}
+    .modal-box p{color:#64748B;font-size:.88rem;margin-bottom:1.2rem}.modal-box .btns{display:flex;gap:.6rem;justify-content:center}
+
+    /* ====== FOOTER ====== */
+    .ft{border-top:1px solid #E5E7EB;margin-top:3rem;padding:2rem 0;text-align:center;color:#94A3B8;font-size:.7rem;letter-spacing:.02em;line-height:2.2}
+    .ft strong{color:#3B82F6;font-weight:600}.ft a{color:#3B82F6}.ft a:hover{text-decoration:underline}
+
+    @media(max-width:768px){.app{padding:1.2rem}}
+    @media(max-width:500px){.hero-l h1{font-size:1.6rem}.hero-illustration{width:180px;height:180px}.hero-illustration span{font-size:3.5rem}}
+  </style>
+</head>
+<body>
+  <div class="toast-c" id="toast-c"></div>
+
+  <!-- ====== NAVIGATION ====== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#" onclick="navTo('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        AI Finger Recognition
+      </a>
+      <div class="nav-links">
+        <button class="nav-link on" data-page="dashboard" onclick="navTo('dashboard')">Dashboard</button>
+        <button class="nav-link" data-page="recognize" onclick="navTo('recognize')">识别中心</button>
+        <a class="nav-link" href="/collect">数据采集</a>
+        <button class="nav-link" data-page="analytics" onclick="navTo('analytics')">数据分析</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app">
+    <!-- ================================================================ -->
+    <!-- DASHBOARD -->
+    <!-- ================================================================ -->
+    <div class="page on" id="page-dashboard">
+      <div class="hero">
+        <div class="hero-l">
+          <h1>AI 手势<span>数字识别</span>平台</h1>
+          <p>基于 CNN 卷积神经网络的智能手势识别系统。从数据采集到模型训练，从实时识别到数据分析，完整的 AI 工程工作流。</p>
+          <div class="btns">
+            <button class="btn btn-primary btn-lg" onclick="navTo('recognize')">立即识别</button>
+            <a class="btn btn-outline btn-lg" href="/collect">数据采集</a>
+          </div>
+        </div>
+        <div class="hero-r">
+          <div class="hero-illustration"><span>🤖</span></div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="icon">📊</div><div class="val" id="s-dataset">--</div><div class="lbl">训练数据集</div></div>
+        <div class="stat-card"><div class="icon">🎯</div><div class="val" id="s-accuracy">--</div><div class="lbl">模型准确率</div></div>
+        <div class="stat-card"><div class="icon">🔍</div><div class="val" id="s-recognize">--</div><div class="lbl">累计识别次数</div></div>
+        <div class="stat-card"><div class="icon">🧠</div><div class="val" id="s-train">--</div><div class="lbl">训练次数</div></div>
+      </div>
+
+      <div class="card section-gap">
+        <div class="sect-title">系统信息</div>
+        <div class="info-grid" id="sys-info"></div>
+      </div>
+
+      <div class="card section-gap">
+        <div class="sect-title">AI 工作流程</div>
+        <div class="flow">
+          <div class="flow-step"><div class="num">01</div><div class="txt">数据采集</div></div><div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="num">02</div><div class="txt">模型训练</div></div><div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="num">03</div><div class="txt">模型更新</div></div><div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="num">04</div><div class="txt">实时识别</div></div><div class="flow-arrow">→</div>
+          <div class="flow-step"><div class="num">05</div><div class="txt">结果分析</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sect-title">关于本项目</div>
+        <p style="color:#64748B;font-size:.88rem;line-height:1.9">本项目基于卷积神经网络（CNN）构建手势数字识别系统，使用 PyTorch 深度学习框架训练多层卷积模型，通过 Flask 提供 Web API 服务。集成数据采集、模型训练、模型更新、实时识别、数据分析等完整的 AI 工程流程。</p>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- RECOGNITION -->
+    <!-- ================================================================ -->
+    <div class="page" id="page-recognize">
+      <div class="recog-grid">
+        <!-- Left -->
+        <div class="recog-left" style="display:flex;flex-direction:column;gap:1rem">
+          <div class="card" style="flex:1;display:flex;flex-direction:column">
+            <div class="sect-title">上传图片</div>
+            <div class="up-zone" id="up-dz" tabindex="0" role="button"><p>拖拽图片到此处</p><span>或点击选择 · JPG/PNG/BMP · 最大 16MB</span></div>
+            <input type="file" id="file-input" accept="image/png,image/jpeg,image/bmp">
+            <button class="btn btn-primary" id="up-btn-rec" style="width:100%;margin-top:.75rem;height:52px;font-size:.9rem">选择照片上传</button>
+          </div>
+          <div class="card">
+            <div class="sect-title">示例图片</div>
+            <div class="samples-row" id="samples-row"></div>
+          </div>
+        </div>
+
+        <!-- Center -->
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="sect-title">图片预览</div>
+          <div class="preview-box"><img id="preview-img" src="" alt="预览"><span id="preview-empty" class="preview-empty">等待上传</span></div>
+          <div id="preview-name"></div>
+        </div>
+
+        <!-- Right -->
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="sect-title">识别结果</div>
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+            <div class="pred-empty" id="pred-empty-rec">等待识别</div>
+            <div class="pred-spin" id="pred-spin-rec"><div class="spin"></div><span>AI 推理中...</span></div>
+            <div class="pred-data-d" id="pred-data-rec">
+              <div class="r-wrap"><svg viewBox="0 0 110 110"><circle class="bg-c" cx="55" cy="55" r="46"/><circle class="fg-c" id="rf" cx="55" cy="55" r="46" stroke-dasharray="289.03" stroke-dashoffset="289.03"/></svg><div class="num" id="rn">-</div></div>
+              <div class="pred-conf">置信度 <b id="rc-conf">--%</b></div>
+              <div class="inf-row"><div class="inf-item"><div class="iv" id="inf-time">-</div><div class="il">推理耗时</div></div><div class="inf-item"><div class="iv" id="inf-fps">-</div><div class="il">FPS</div></div><div class="inf-item"><div class="iv" id="inf-t1">-</div><div class="il">Top-1</div></div><div class="inf-item"><div class="iv" id="inf-t2">-</div><div class="il">Top-2</div></div></div>
+              <div class="bars-w" id="bars-w"></div>
+            </div>
+            <div class="err-box" id="err-box-rec"></div>
+          </div>
+          <div style="display:flex;gap:.75rem;padding-top:1rem;border-top:1px solid #F1F5F9;margin-top:0">
+            <button class="btn btn-primary" id="btn-retry-rec" disabled style="flex:1;height:48px">重新识别</button>
+            <button class="btn btn-ghost" id="btn-reset-rec" style="flex:1;height:48px">重新上传</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="card" style="margin-top:1.5rem">
+        <div class="sect-title">识别历史 <span style="font-weight:400;font-size:.72rem;color:#94A3B8">最近 20 条</span></div>
+        <div class="hist-list" id="hist-list-rec"><div style="color:#94A3B8;text-align:center;padding:2rem;font-size:.78rem">暂无记录</div></div>
+        <button class="btn btn-ghost" id="btn-clear-hist-rec" style="margin-top:.6rem;width:100%">清空历史</button>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- ANALYTICS -->
+    <!-- ================================================================ -->
+    <div class="page" id="page-analytics">
+      <div class="stat-grid" id="analytics-stats"></div>
+      <div class="analytics-grid">
+        <div class="card chart-box"><h3>数据集各类别数量分布</h3><canvas id="chart-dist"></canvas></div>
+        <div class="card chart-box"><h3>模型准确率对比</h3><canvas id="chart-acc"></canvas></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="card chart-box"><h3>今日识别数据统计</h3><canvas id="chart-reco"></canvas></div>
+        <div class="card chart-box"><h3>训练历史</h3><div id="analytics-train-hist" style="max-height:200px;overflow-y:auto;font-size:.75rem;color:#64748B"></div></div>
+      </div>
+      <div class="card">
+        <div class="sect-title">模型信息</div>
+        <div class="info-grid" id="analytics-model-info"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="ft">
+    <strong>AI Finger Recognition Platform</strong><br>
+    PyTorch · Flask · OpenCV · RTX 4060 · Version 1.0<br>
+    Shandong Institute of Business and Technology · Course Project
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-bg" id="modal-bg"><div class="modal-box"><p id="modal-text"></p><div class="btns"><button class="btn btn-primary" id="modal-ok">确定</button><button class="btn btn-ghost" id="modal-cancel">取消</button></div></div></div>
+
+  <script>
+    (function(){
+      const $=id=>document.getElementById(id),R=289.03;
+      let curFile=null,busy=false,sysInfo=null;
+
+      function navTo(page){
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+        const pg=$('page-'+page);if(pg)pg.classList.add('on');
+        document.querySelectorAll('.nav-link[data-page]').forEach(l=>l.classList.toggle('on',l.dataset.page===page));
+        if(page==='dashboard')loadDashboard();
+        if(page==='recognize'){loadRecogInfo();loadSamples();loadHistory()}
+        if(page==='analytics')loadAnalytics();
+        history.replaceState(null,'','#'+page);
+      }
+      function toast(msg,type='ok'){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;$('toast-c').appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2600)}
+      function modal(t){return new Promise(r=>{$('modal-text').textContent=t;$('modal-bg').classList.add('on');$('modal-ok').onclick=()=>{$('modal-bg').classList.remove('on');r(true)};$('modal-cancel').onclick=()=>{$('modal-bg').classList.remove('on');r(false)}})}
+
+      async function ldSys(){try{const r=await fetch('/api/system/info');sysInfo=await r.json()}catch(e){sysInfo=null}}
+
+      async function loadDashboard(){if(!sysInfo)await ldSys();if(!sysInfo)return;
+        $('s-dataset').textContent=sysInfo.dataset_total;$('s-accuracy').textContent=sysInfo.model_accuracy+'%';$('s-recognize').textContent=sysInfo.recognition_count;$('s-train').textContent=sysInfo.training_count;
+        $('sys-info').innerHTML=['模型名称',sysInfo.model_name,'模型类型','CNN（8层卷积）','参数量',sysInfo.model_params,'输入尺寸','64×64 RGB','PyTorch',sysInfo.pytorch_version,'设备',sysInfo.device,'数据集',sysInfo.dataset_total+' 张','实拍照片',sysInfo.real_photos+' 张','更新时间',sysInfo.model_updated].reduce((a,v,i)=>i%2===0?a+'<div class="info-item"><span class="k">'+v+'</span>':a+'<span class="v">'+v+'</span></div>',a=>a,'')}
+
+      async function loadRecogInfo(){if(!sysInfo)await ldSys();if(!sysInfo)return}
+      async function loadSamples(){$('samples-row').innerHTML='';for(let d=0;d<=5;d++){const b=document.createElement('button');b.className='sample-btn';b.textContent=d;b.title='识别数字'+d+'示例';b.onclick=()=>useSample(d);$('samples-row').appendChild(b)}}
+      async function useSample(d){try{const r=await fetch('/api/sample/'+d);if(!r.ok)throw 0;handleFile(new File([await r.blob()],'sample_'+d+'.png',{type:'image/png'}))}catch(e){try{const r2=await fetch('/api/sample/test/'+d);handleFile(new File([await r2.blob()],'sample_'+d+'.png',{type:'image/png'}))}catch(e2){toast('示例加载失败','err')}}}
+      async function loadHistory(){try{const r=await fetch('/api/history');const d=await r.json();if(!d.success||!d.records.length){$('hist-list-rec').innerHTML='<div style="color:#94A3B8;text-align:center;padding:2rem;font-size:.78rem">暂无记录</div>';return}$('hist-list-rec').innerHTML=d.records.reverse().map(rec=>{const dt=new Date(rec.time).toLocaleString('zh-CN');return'<div class="hist-item"><div class="hist-thumb">'+(rec.thumb?'<img src="'+rec.thumb+'">':'🖐️')+'</div><div class="hist-info"><div class="d">数字 <span style="color:#3B82F6">'+rec.digit+'</span> · '+rec.confidence+'%</div><div class="t">'+(rec.filename||'')+'</div><div class="rt">'+dt+' · '+(rec.inference_time||'?')+'ms</div></div></div>'}).join('')}catch(e){}}
+
+      $('up-dz').addEventListener('click',()=>$('file-input').click());$('up-btn-rec').addEventListener('click',()=>$('file-input').click());
+      $('up-dz').addEventListener('dragover',e=>{e.preventDefault()});$('up-dz').addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0])});
+      $('file-input').addEventListener('change',()=>{if($('file-input').files.length)handleFile($('file-input').files[0])});
+
+      function handleFile(f){$('err-box-rec').classList.remove('show');$('err-box-rec').textContent='';if(!['image/png','image/jpeg','image/bmp','image/jpg'].includes(f.type)){$('err-box-rec').textContent='仅支持 PNG/JPG/BMP';$('err-box-rec').classList.add('show');return}if(f.size>16*1024*1024){$('err-box-rec').textContent='图片超过 16MB';$('err-box-rec').classList.add('show');return}curFile=f;const r=new FileReader();r.onload=function(){$('preview-img').src=r.result;$('preview-img').style.display='';$('preview-empty').style.display='none';$('preview-name').textContent=f.name;$('pred-data-rec').classList.remove('on');$('pred-empty-rec').style.display='';$('pred-spin-rec').classList.remove('on');$('rf').style.strokeDashoffset=R;$('rf').style.stroke='#3B82F6';$('rn').textContent='-';$('rc-conf').textContent='--%';$('rc-conf').style.color='';$('bars-w').innerHTML='';$('btn-retry-rec').disabled=false;recognize()};r.readAsDataURL(f)}
+
+      async function recognize(){if(!curFile||busy)return;busy=true;$('err-box-rec').classList.remove('show');$('pred-empty-rec').style.display='none';$('pred-spin-rec').classList.add('on');$('pred-data-rec').classList.remove('on');$('btn-retry-rec').disabled=true;const t0=performance.now(),fd=new FormData();fd.append('image',curFile);try{const r=await fetch('/predict',{method:'POST',body:fd});const t1=performance.now();if(!r.ok)throw new Error((await r.json().catch(()=>({error:'HTTP '+r.status}))).error||'server error');const d=await r.json();if(!d.success)throw new Error(d.error||'fail');const t=(t1-t0).toFixed(1);$('pred-spin-rec').classList.remove('on');$('pred-data-rec').classList.add('on');$('inf-time').textContent=t+' ms';$('inf-fps').textContent=(1000/parseFloat(t)).toFixed(0);const digit=d.digit,conf=d.confidence;$('rn').textContent=digit;$('rf').style.strokeDashoffset=R-(conf/100)*R;$('rf').style.stroke=conf>=80?'#10B981':(conf>=50?'#F59E0B':'#EF4444');$('rc-conf').textContent=conf.toFixed(1)+'%';$('rc-conf').style.color=conf>=80?'#10B981':(conf>=50?'#F59E0B':'#DC2626');const sorted=Object.entries(d.probabilities).sort((a,b)=>b[1]-a[1]);$('inf-t1').textContent='数字'+sorted[0][0];$('inf-t2').textContent='数字'+sorted[1][0];let bars='';for(let i=0;i<10;i++){const p=d.probabilities[String(i)];if(p===undefined)continue;bars+='<div class="bar-r"><span class="bar-l">'+i+'</span><div class="bar-t"><div class="bar-f '+(i===digit?'h':(p>5?'m':'l'))+'" style="width:'+p+'%"></div></div><span class="bar-p">'+p.toFixed(1)+'%</span></div>'}$('bars-w').innerHTML=bars;toast('识别完成！数字 '+digit+'（'+conf.toFixed(1)+'%）','ok');const r2=new FileReader();r2.onload=function(){fetch('/api/history/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({digit,confidence:conf,filename:d.filename||curFile.name,thumb:r2.result,inference_time:t,time:new Date().toISOString()})}).then(()=>{loadHistory();ldSys().then(loadDashboard)})};r2.readAsDataURL(curFile)}catch(e){$('pred-spin-rec').classList.remove('on');$('pred-empty-rec').style.display='';$('pred-empty-rec').textContent='识别失败';$('err-box-rec').textContent=e.message;$('err-box-rec').classList.add('show');toast('识别失败：'+e.message,'err')}finally{busy=false;$('btn-retry-rec').disabled=false}}
+      $('btn-retry-rec').addEventListener('click',recognize);
+      $('btn-reset-rec').addEventListener('click',()=>{curFile=null;$('file-input').value='';busy=false;$('preview-img').style.display='none';$('preview-empty').style.display='';$('preview-name').textContent='';$('pred-data-rec').classList.remove('on');$('pred-empty-rec').style.display='';$('pred-spin-rec').classList.remove('on');$('err-box-rec').classList.remove('show')});
+      $('btn-clear-hist-rec').addEventListener('click',async()=>{if(!await modal('确定清空所有识别历史？'))return;await fetch('/api/history/clear',{method:'POST'});loadHistory();toast('已清空','info')});
+
+      /* Analytics */
+      let charts=[];
+      async function loadAnalytics(){if(!sysInfo)await ldSys();try{const[qlRes,histRes]=await Promise.all([fetch('/api/dataset/quality').then(r=>r.json()),fetch('/api/history').then(r=>r.json())]);
+        $('analytics-stats').innerHTML=[['数据集',sysInfo?.dataset_total||'--'],['准确率',(sysInfo?.model_accuracy||'--')+'%'],['累计识别',sysInfo?.recognition_count||'--'],['训练次数',sysInfo?.training_count||'--']].map(([l,v])=>'<div class="stat-card"><div class="val" style="font-size:1.5rem">'+v+'</div><div class="lbl">'+l+'</div></div>').join('');
+        charts.forEach(c=>{try{c.destroy()}catch(e){}});charts=[];
+        const dC=qlRes.counts||{};const lbs=[];for(let d=0;d<=5;d++)lbs.push(d);const ctx1=$('chart-dist').getContext('2d');
+        charts.push(new Chart(ctx1,{type:'bar',data:{labels:lbs,datasets:[{data:lbs.map(d=>dC[d]||0),backgroundColor:lbs.map(d=>(dC[d]||0)===Math.max(...lbs.map(dd=>dC[dd]||0))?'#3B82F6':'#93C5FD'),borderRadius:6,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#F1F5F9'},ticks:{color:'#94A3B8'}},x:{grid:{display:false},ticks:{color:'#64748B'}}}}}));
+        const ctx2=$('chart-acc').getContext('2d');charts.push(new Chart(ctx2,{type:'bar',data:{labels:['原始模型','当前模型'],datasets:[{data:[93.96,sysInfo?.model_accuracy||95],backgroundColor:['#93C5FD','#3B82F6'],borderRadius:8,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:80,max:100,grid:{color:'#F1F5F9'},ticks:{color:'#94A3B8'}},x:{grid:{display:false},ticks:{color:'#64748B'}}}}}));
+        const recs=histRes.records||[],today=recs.filter(r=>new Date(r.time).toDateString()===new Date().toDateString()).length,avg=recs.length?+(recs.reduce((a,b)=>a+(b.confidence||0),0)/recs.length).toFixed(1):0,mx=recs.length?Math.max(...recs.map(r=>r.confidence||0)):0;
+        const ctx3=$('chart-reco').getContext('2d');charts.push(new Chart(ctx3,{type:'bar',data:{labels:['今日识别','累计识别','平均置信度','最高置信度'],datasets:[{data:[today,recs.length,avg,mx],backgroundColor:['#3B82F6','#60A5FA','#93C5FD','#BFDBFE'],borderRadius:6,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#F1F5F9'},ticks:{color:'#94A3B8'}},x:{grid:{display:false},ticks:{color:'#64748B'}}}}}));
+        $('analytics-model-info').innerHTML=['模型名称',sysInfo?.model_name||'CustomNet','参数量',sysInfo?.model_params||'--','输入尺寸',sysInfo?.input_size||'64x64','更新时间',sysInfo?.model_updated||'--','Python',sysInfo?.python_version||'--','PyTorch',sysInfo?.pytorch_version||'--'].reduce((a,v,i)=>i%2===0?a+'<div class="info-item"><span class="k">'+v+'</span>':a+'<span class="v">'+v+'</span></div>',a=>a,'');
+        const trH=histRes.records?.filter(r=>r.type==='training')||[];$('analytics-train-hist').innerHTML=trH.length?trH.map(r=>'<div style="padding:.4rem 0;border-bottom:1px solid #F1F5F9"><span style="color:#1E293B;font-weight:500">'+((r.accuracy||'--')+'%</span> · <span style="color:#94A3B8;font-size:.7rem">'+new Date(r.time).toLocaleString('zh-CN'))+'</span></div>').join(''):'<div style="color:#94A3B8;text-align:center;padding:2rem">暂无训练记录</div>';
+      }catch(e){console.error(e)}}
+
+      document.addEventListener('keydown',e=>{if(e.key==='Escape')$('modal-bg').classList.remove('on')});
+      const hash=location.hash.replace('#','')||'dashboard';ldSys().then(()=>navTo(hash));
+    })();
+  </script>
+</body>
+</html>

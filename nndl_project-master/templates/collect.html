@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据采集与训练 — AI Finger Recognition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{font-size:16px;-webkit-font-smoothing:antialiased}
+    body{font-family:'Noto Sans SC','Inter',-apple-system,sans-serif;background:#F8FAFC;color:#1E293B;min-height:100vh;line-height:1.6}
+    a{color:inherit;text-decoration:none}
+
+    .nav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #E5E7EB;height:72px;display:flex;align-items:center;padding:0 2rem}
+    .nav-inner{width:100%;max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .nav-brand{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1rem;color:#1E293B}.nav-brand svg{width:24px;height:24px;color:#3B82F6}
+    .nav-links{display:flex;align-items:center;gap:1.5rem}
+    .nav-link{font-size:.85rem;font-weight:500;color:#64748B;padding:.3rem 0;position:relative;transition:.2s;border:none;background:none;font-family:inherit;cursor:pointer}
+    .nav-link:hover{color:#3B82F6}.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:#3B82F6;border-radius:1px;transition:.25s}.nav-link:hover::after{width:100%}
+    .nav-link.on{color:#3B82F6;background:rgba(59,130,246,.06);padding:.35rem 1rem;border-radius:100px}.nav-link.on::after{display:none}
+    @media(max-width:768px){.nav{padding:0 1rem}.nav-links{gap:.8rem}.nav-link{font-size:.78rem}}
+
+    .app{max-width:1400px;margin:0 auto;padding:2rem}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:inherit;font-size:.84rem;font-weight:600;padding:.5rem 1.3rem;border-radius:12px;border:none;cursor:pointer;transition:.2s;height:44px}
+    .btn-primary{background:#3B82F6;color:#fff}.btn-primary:hover{background:#2563EB;transform:translateY(-1px);box-shadow:0 2px 10px rgba(59,130,246,.15)}.btn-primary:active{transform:scale(.98)}
+    .btn-outline{background:#fff;color:#3B82F6;border:1.5px solid #3B82F6}.btn-outline:hover{background:#EFF6FF}
+    .btn-ghost{background:#fff;color:#64748B;border:1px solid #E5E7EB}.btn-ghost:hover{background:#F8FAFC;color:#1E293B}
+    .btn-train{background:#3B82F6;color:#fff;font-weight:700;padding:.65rem 2.5rem;font-size:.95rem}.btn-train:hover{background:#2563EB}.btn-train:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-danger{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}.btn-danger:hover{background:#FEE2E2}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+    .btn:active{transform:scale(.98)}
+
+    .toast-c{position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
+    .toast{padding:.65rem 1rem;border-radius:12px;font-size:.82rem;font-weight:500;animation:slideIn .3s ease;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.08);max-width:360px;border:1px solid #E5E7EB}
+    .toast.ok{border-left:3px solid #10B981}.toast.err{border-left:3px solid #EF4444}.toast.info{border-left:3px solid #3B82F6}
+    @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+    .card{background:#fff;border:1px solid #E5E7EB;border-radius:20px;padding:1.8rem;box-shadow:0 1px 3px rgba(0,0,0,.02)}
+    .sect-title{font-size:.9rem;font-weight:700;color:#1E293B;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}.sect-title::before{content:'';width:4px;height:16px;background:#3B82F6;border-radius:2px}
+
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+    .stat-card{background:#fff;border:1px solid #E5E7EB;border-radius:20px;padding:1.3rem;text-align:center;transition:.2s}.stat-card:hover{border-color:#BFDBFE;box-shadow:0 2px 12px rgba(59,130,246,.04)}
+    .stat-card .val{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;color:#1E293B}.stat-card .lbl{font-size:.76rem;color:#64748B;margin-top:.2rem;font-weight:500}
+    @media(max-width:768px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+
+    /* Digit cards */
+    .digit-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.8rem}
+    .digit-card{padding:1.2rem .5rem;border-radius:16px;border:2px solid #E5E7EB;background:#fff;cursor:pointer;transition:.2s;text-align:center}.digit-card:hover{border-color:#93C5FD}.digit-card.on{border-color:#3B82F6;background:#EFF6FF}.digit-card .dn{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:#1E293B}.digit-card.on .dn{color:#3B82F6}.digit-card .dl{font-size:.62rem;color:#94A3B8;margin-top:.15rem}
+
+    .drop-z{border:2px dashed #CBD5E1;border-radius:16px;padding:1.8rem 1.5rem;text-align:center;cursor:pointer;transition:.2s;background:#FAFBFC;margin-bottom:.6rem}
+    .drop-z:hover{border-color:#3B82F6;background:#F0F7FF}.drop-z p{color:#64748B;font-size:.82rem}.drop-z span{color:#94A3B8;font-size:.65rem;display:block;margin-top:.1rem}#fInput{display:none}
+
+    .pending{display:grid;grid-template-columns:repeat(5,1fr);gap:.3rem;margin-top:.5rem;max-height:130px;overflow-y:auto}
+    .p-item{position:relative;border-radius:8px;overflow:hidden;border:1px solid #E5E7EB;aspect-ratio:1;background:#F1F5F9}.p-item img{width:100%;height:100%;object-fit:cover}.p-item .tag{position:absolute;bottom:2px;left:2px;background:#3B82F6;color:#fff;font-size:.48rem;font-weight:700;padding:0 4px;border-radius:3px}
+
+    .tip{padding:.7rem .9rem;background:#F0F7FF;border:1px solid #BFDBFE;border-radius:14px;font-size:.68rem;color:#64748B;line-height:1.7;margin-top:.6rem}.tip strong{color:#3B82F6}
+
+    .quality{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:#F8FAFC;border-radius:14px;margin-bottom:.8rem}
+    .quality .score{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;color:#3B82F6;min-width:3rem;text-align:center}.quality .level{font-size:.88rem;font-weight:600;color:#1E293B}.quality .tips{font-size:.64rem;color:#94A3B8;margin-top:.1rem}
+
+    .dist-item{display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem}.dist-d{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;width:1rem;text-align:center;color:#1E293B}
+    .dist-bar{flex:1;height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden}.dist-f{height:100%;background:#3B82F6;border-radius:3px;transition:.5s}.dist-c{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#94A3B8;width:2.5rem;text-align:right}
+
+    .train-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.6rem}
+    .ts-item{background:#F8FAFC;border-radius:10px;padding:.5rem;text-align:center}.ts-item .v2{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:#3B82F6;font-weight:600}.ts-item .l2{font-size:.52rem;color:#94A3B8;margin-top:.1rem}
+
+    .log-box{display:none;margin-top:.8rem}.log-box.on{display:block}
+    .log-content{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:14px;padding:.7rem;max-height:160px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:.62rem;line-height:1.5;color:#64748B;white-space:pre-wrap}
+
+    /* ====== 训练进度可视化 ====== */
+    .train-progress-bar{height:8px;background:#F1F5F9;border-radius:4px;overflow:hidden;margin:.8rem 0}
+    .train-progress-fill{height:100%;background:#3B82F6;border-radius:4px;transition:width .5s;width:0}
+    .train-live{display:none}.train-live.on{display:block}
+    .train-live-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.6rem 0}
+    .train-live-card{background:#F8FAFC;border-radius:12px;padding:.6rem;text-align:center}
+    .train-live-card .tlc-v{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:#3B82F6}
+    .train-live-card .tlc-l{font-size:.58rem;color:#94A3B8;margin-top:.1rem}
+    .train-live-card .tlc-v.green{color:#10B981}.train-live-card .tlc-v.red{color:#EF4444}
+
+    .comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.6rem}
+    .comp-item{background:#F8FAFC;border-radius:12px;padding:.7rem;text-align:center}.comp-item .lab{font-size:.58rem;color:#94A3B8;margin-bottom:.15rem}.comp-item .val{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700}.comp-item .delta{font-size:.62rem;color:#10B981;font-weight:600;margin-top:.1rem}
+
+    .ft{border-top:1px solid #E5E7EB;margin-top:3rem;padding:2rem 0;text-align:center;color:#94A3B8;font-size:.7rem;letter-spacing:.02em;line-height:2.2}
+    .ft strong{color:#3B82F6}.ft a{color:#3B82F6}.ft a:hover{text-decoration:underline}
+
+    @media(max-width:768px){.app{padding:1.2rem}.digit-cards{grid-template-columns:repeat(3,1fr)}.train-stats{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <div class="toast-c" id="toast-c"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        AI Finger Recognition
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="/">Dashboard</a>
+        <a class="nav-link" href="/#recognize">识别中心</a>
+        <a class="nav-link on" href="/collect">数据采集</a>
+        <a class="nav-link" href="/#analytics">数据分析</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app">
+    <div class="stat-grid" id="sc-row"></div>
+
+    <div class="grid-2">
+      <!-- Left: Collect -->
+      <div class="card">
+        <div class="sect-title">手势数据采集</div>
+        <div class="digit-cards" id="digits">
+          <div class="digit-card on" data-d="0"><div class="dn">0</div><div class="dl">手势 0</div></div>
+          <div class="digit-card" data-d="1"><div class="dn">1</div><div class="dl">手势 1</div></div>
+          <div class="digit-card" data-d="2"><div class="dn">2</div><div class="dl">手势 2</div></div>
+          <div class="digit-card" data-d="3"><div class="dn">3</div><div class="dl">手势 3</div></div>
+          <div class="digit-card" data-d="4"><div class="dn">4</div><div class="dl">手势 4</div></div>
+          <div class="digit-card" data-d="5"><div class="dn">5</div><div class="dl">手势 5</div></div>
+        </div>
+        <div class="drop-z" id="drop-z"><p>拖拽照片到此处（支持多选）</p><span>JPG · PNG · BMP</span></div>
+        <input type="file" id="fInput" accept="image/*" multiple>
+        <button class="btn btn-primary" id="addBtn" disabled style="width:100%">⬆️ 添加照片到训练集</button>
+        <div class="pending" id="pending"></div>
+        <div class="tip"><strong>拍摄建议</strong>：不同背景 · 不同距离 · 不同光照 · 不同角度 · 保持清晰 · 避免遮挡 · 每个数字建议 10 张以上</div>
+      </div>
+
+      <!-- Right: Stats & Train -->
+      <div>
+        <div class="card" style="margin-bottom:1.5rem">
+          <div class="sect-title">数据集质量分析</div>
+          <div class="quality"><div class="score" id="ql-score">--</div><div class="info"><div class="level" id="ql-level">加载中...</div><div class="tips" id="ql-tips"></div></div></div>
+          <div class="sect-title">类别分布</div>
+          <div id="dist-chart"></div>
+        </div>
+
+        <div class="card">
+          <div class="sect-title">模型训练</div>
+          <div class="train-stats">
+            <div class="ts-item"><div class="l2">状态</div><div class="v2" id="ts-status">空闲</div></div>
+            <div class="ts-item"><div class="l2">轮次</div><div class="v2" id="ts-epoch">-</div></div>
+            <div class="ts-item"><div class="l2">准确率</div><div class="v2" id="ts-acc">-</div></div>
+            <div class="ts-item"><div class="l2">损失</div><div class="v2" id="ts-loss">-</div></div>
+          </div>
+          <div class="comp-grid">
+            <div class="comp-item"><div class="lab">原始模型</div><div class="val" style="color:#64748B">93.96%</div></div>
+            <div class="comp-item"><div class="lab">当前模型</div><div class="val" id="comp-curr" style="color:#3B82F6">--</div><div class="delta" id="comp-delta"></div></div>
+          </div>
+          <div style="display:flex;gap:.5rem;margin-top:.8rem">
+            <button class="btn btn-train" id="trainBtn" style="flex:1">🚀 开始训练</button>
+            <button class="btn btn-danger" id="clearBtn">清空数据</button>
+          </div>
+
+          <!-- 实时训练进度可视化 -->
+          <div class="train-live" id="trainLive">
+            <div class="train-progress-bar"><div class="train-progress-fill" id="trainProgressFill"></div></div>
+            <div class="train-live-grid">
+              <div class="train-live-card"><div class="tlc-v" id="tlv-epoch">-</div><div class="tlc-l">当前轮次</div></div>
+              <div class="train-live-card"><div class="tlc-v green" id="tlv-acc">-</div><div class="tlc-l">验证准确率</div></div>
+              <div class="train-live-card"><div class="tlc-v red" id="tlv-loss">-</div><div class="tlc-l">验证损失</div></div>
+            </div>
+            <div class="train-live-grid">
+              <div class="train-live-card"><div class="tlc-v" id="tlv-train">-</div><div class="tlc-l">训练准确率</div></div>
+              <div class="train-live-card"><div class="tlc-v" id="tlv-lr">-</div><div class="tlc-l">学习率</div></div>
+              <div class="train-live-card"><div class="tlc-v" id="tlv-time">-</div><div class="tlc-l">已用时间</div></div>
+            </div>
+          </div>
+
+          <div class="log-box" id="logBox">
+            <div class="sect-title">训练日志</div>
+            <div class="log-content" id="logContent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sect-title">模型版本管理</div>
+      <div id="versions-list" style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem"></div>
+    </div>
+  </div>
+
+  <div class="ft">
+    <strong>AI Finger Recognition Platform</strong><br>
+    PyTorch · Flask · RTX 4060 · Version 1.0<br>
+    Shandong Institute of Business and Technology · Course Project
+  </div>
+
+  <script>
+    (function(){
+      const $=id=>document.getElementById(id);let cur=0,pending=[],timer=null;
+      function toast(msg,type='ok'){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;$('toast-c').appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2600)}
+
+      async function loadAll(){try{const[si,ql,sc,vs]=await Promise.all([fetch('/api/system/info').then(r=>r.json()),fetch('/api/dataset/quality').then(r=>r.json()),fetch('/api/capture/stats').then(r=>r.json()),fetch('/api/models/versions').then(r=>r.json())]);return{si,ql,sc,vs}}catch(ex){return null}}
+
+      async function render(){const d=await loadAll();if(!d)return;const{si,ql,sc,vs}=d;
+        $('sc-row').innerHTML=[['数据集总数',si.dataset_total+' 张'],['实拍照片',si.real_photos+' 张'],['模型准确率',si.model_accuracy+'%'],['训练次数',si.training_count+' 次']].map(([l,v])=>'<div class="stat-card"><div class="val" style="font-size:1.3rem">'+v+'</div><div class="lbl">'+l+'</div></div>').join('');
+        $('ql-score').textContent=ql.score||'0';$('ql-level').textContent=ql.level||'暂无';$('ql-tips').textContent=ql.score>=75?'数据质量良好 ✓':(ql.score>=40?'建议每个数字再增加 5~10 张':'每个数字至少 10 张不同照片');
+        const dc=$('dist-chart'),mv=Math.max(1,...Object.values(ql.counts||{0:1}).slice(0,6));dc.innerHTML='';for(let d=0;d<=5;d++){const c=(ql.counts||{})[String(d)]||0;const r=document.createElement('div');r.className='dist-item';r.innerHTML='<span class="dist-d">'+d+'</span><div class="dist-bar"><div class="dist-f" style="width:'+c/mv*100+'%"></div></div><span class="dist-c">'+c+' 张</span>';dc.appendChild(r)}
+        const vl=$('versions-list');vl.innerHTML='';if(vs.versions&&vs.versions.length)vs.versions.forEach(v=>{const b=document.createElement('div');b.style.cssText='background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:.4rem .8rem;font-size:.72rem';b.innerHTML='<span style="font-weight:600;color:'+(v.is_current?'#3B82F6':'#64748B')+'">'+v.name+'</span><br><span style="color:#94A3B8;font-size:.58rem">'+v.size_mb+' MB · '+v.updated+'</span>';vl.appendChild(b)});else vl.innerHTML='<span style="color:#94A3B8;font-size:.74rem">暂无版本记录</span>';
+        const tt=sc.total||0;$('trainBtn').disabled=tt<6;$('trainBtn').textContent=tt>=6?'🚀 开始训练（'+tt+' 张实拍）':'需要至少 6 张实拍照片';
+        $('comp-curr').textContent=(si.model_accuracy||'--')+'%';
+      }
+
+      document.querySelectorAll('.digit-card').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.digit-card').forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=parseInt(b.dataset.d);pending.forEach(p=>p.digit=cur);rp();ub()}));
+      $('drop-z').addEventListener('click',()=>$('fInput').click());
+      $('drop-z').addEventListener('dragover',ev=>{ev.preventDefault();ev.currentTarget.style.borderColor='#3B82F6'});
+      $('drop-z').addEventListener('dragleave',ev=>{ev.currentTarget.style.borderColor=''});
+      $('drop-z').addEventListener('drop',ev=>{ev.preventDefault();ev.currentTarget.style.borderColor='';if(ev.dataTransfer.files.length)addF(ev.dataTransfer.files)});
+      $('fInput').addEventListener('change',()=>{if($('fInput').files.length)addF($('fInput').files);$('fInput').value=''});
+      function addF(files){for(const f of files){if(!f.type.startsWith('image/'))continue;pending.push({file:f,digit:cur})}rp();ub()}
+      function rp(){$('pending').innerHTML=pending.map(p=>'<div class="p-item"><img src="'+URL.createObjectURL(p.file)+'"><span class="tag">'+p.digit+'</span></div>').join('')}
+      function ub(){$('addBtn').disabled=pending.length===0;$('addBtn').textContent=pending.length===0?'⬆️ 添加照片到训练集':'⬆️ 添加 '+pending.length+' 张（数字 '+cur+'）'}
+
+      $('addBtn').addEventListener('click',async()=>{if(!pending.length)return;$('addBtn').disabled=true;$('addBtn').textContent='上传中...';const fd=new FormData();pending.forEach(p=>{fd.append('images',p.file);fd.append('digits',String(p.digit))});try{const r=await fetch('/api/upload-photos',{method:'POST',body:fd});const d=await r.json();if(d.success){toast('成功添加 '+d.added+' 张！','ok');pending=[];rp();ub();render()}else throw new Error(d.error||'失败')}catch(e){toast(e.message,'err');$('addBtn').disabled=false}});
+
+      $('trainBtn').addEventListener('click',async()=>{$('trainBtn').disabled=true;$('trainBtn').textContent='启动中...';$('ts-status').textContent='启动';const startTime=Date.now();try{const r=await fetch('/api/train',{method:'POST'});const d=await r.json();if(!d.success)throw new Error(d.error||'失败');$('trainBtn').textContent='训练中...';$('ts-status').textContent='训练中';$('ts-status').style.color='#3B82F6';$('logBox').classList.add('on');$('trainLive').classList.add('on');$('logContent').textContent='启动训练...\n';$('trainProgressFill').style.width='2%';
+        let totalEp=20,completedEp=0;
+        timer=setInterval(async()=>{try{const rr=await fetch('/api/train/progress');const pp=await rr.json();$('logContent').textContent=pp.lines.join('').slice(-5000);$('logContent').scrollTop=$('logContent').scrollHeight;
+          let foundEpoch=null;
+          pp.lines.forEach(l=>{
+            const m=l.match(/Epoch\s+(\d+)\/(\d+).*?训练:\s*([\d.]+)%.*?验证:\s*([\d.]+)%/);if(m){$('ts-epoch').textContent=m[1];$('ts-acc').textContent=m[4]+'%';foundEpoch=parseInt(m[1]);completedEp=parseInt(m[1]);totalEp=parseInt(m[2]);
+              $('tlv-epoch').textContent=m[1]+'/'+m[2];$('tlv-acc').textContent=m[4]+'%';$('tlv-train').textContent=m[3]+'%';
+            }
+            const m2=l.match(/LR:\s*([\d.]+e[-\d]+)/);if(m2){$('tlv-lr').textContent=m2[1];}
+            const m3=l.match(/验证损失.*?([\d.]+)\)/);if(m3){$('tlv-loss').textContent=m3[1];}
+          });
+          if(foundEpoch){const pct=Math.min(95,Math.round(foundEpoch/totalEp*100));$('trainProgressFill').style.width=pct+'%'}
+          const elapsed=Math.floor((Date.now()-startTime)/1000);const mm=Math.floor(elapsed/60),ss=elapsed%60;$('tlv-time').textContent=mm+':'+String(ss).padStart(2,'0');
+          if(pp.complete){clearInterval(timer);timer=null;$('trainProgressFill').style.width='100%';$('tlv-epoch').textContent=totalEp+'/'+totalEp;$('tlv-epoch').style.color='#10B981';$('trainBtn').textContent='✅ 训练完成';$('trainBtn').disabled=false;$('ts-status').textContent='完成';$('ts-status').style.color='#10B981';toast('训练完成！模型已更新','ok');render()}
+          else if(pp.failed){clearInterval(timer);timer=null;$('trainProgressFill').style.background='#EF4444';$('trainBtn').textContent='重试训练';$('trainBtn').disabled=false;$('ts-status').textContent='失败';$('ts-status').style.color='#DC2626';toast('训练失败','err');$('tlv-epoch').style.color='#EF4444'}
+        }catch(e){}},2000)}catch(e){toast(e.message,'err');$('trainBtn').disabled=false;$('trainBtn').textContent='重试';$('ts-status').textContent='空闲';$('trainLive').classList.remove('on')}});
+
+      $('clearBtn').addEventListener('click',async()=>{if(!confirm('确定清空所有实拍照片？此操作不可恢复。'))return;await fetch('/api/clear-photos',{method:'POST'});toast('已清空','info');render()});
+
+      render();setInterval(render,30000);
+    })();
+  </script>
+</body>
+</html>

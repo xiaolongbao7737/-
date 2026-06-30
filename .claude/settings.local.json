@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import torch; print\\('PyTorch OK, version:', torch.__version__\\); print\\('CUDA available:', torch.cuda.is_available\\(\\)\\)\")",
+      "Bash(pip install *)",
+      "Bash(python -c \"import torch; print\\('PyTorch OK, version:', torch.__version__\\)\")",
+      "Bash(pip --version)",
+      "Bash(pip list *)",
+      "Bash(python -m pip install torch torchvision --proxy \"\" --index-url https://download.pytorch.org/whl/cpu)",
+      "Bash(pip config *)",
+      "Read(//c/Users/dell/.config/pip/**)",
+      "Read(//c/Users/dell/pip/**)",
+      "Bash(env)",
+      "Bash(python -c \"import urllib.request; print\\(urllib.request.getproxies\\(\\)\\)\")",
+      "Bash(curl -s --connect-timeout 5 https://pypi.org/simple/)",
+      "Bash(python -m pip install torch torchvision)",
+      "Bash(python -c \"import torch; import torchvision; print\\('PyTorch:', torch.__version__\\); print\\('TorchVision:', torchvision.__version__\\); print\\('CUDA available:', torch.cuda.is_available\\(\\)\\)\")"
+    ]
+  }
+}
